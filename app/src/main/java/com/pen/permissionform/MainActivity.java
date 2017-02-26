@@ -31,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
             public void onDenied() {
                 PermissionForM.go2AppSetting(MainActivity.this);
             }
+
+            @Override
+            public void onShowRequestPermissionRationale() {
+                Toast.makeText(MainActivity.this, "请务必同意权限请求", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

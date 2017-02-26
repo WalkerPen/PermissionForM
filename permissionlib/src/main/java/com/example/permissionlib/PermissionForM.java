@@ -105,6 +105,11 @@ public class PermissionForM {
 
         } else {
             //没有权限，请求
+            if(shouldShowRequestPermissionRationale(activity, permissions)) {
+                if(sPermissionListener != null) {
+                    sPermissionListener.onShowRequestPermissionRationale();
+                }
+            }
             ActivityCompat.requestPermissions(activity,
                     permissions,
                     REQUEST_CODE_SINGLE_PERMISSIONS);
@@ -119,6 +124,15 @@ public class PermissionForM {
             }
         }
         return true;
+    }
+    
+    private static boolean shouldShowRequestPermissionRationale(Activity activity, String[] permissions) {
+        for(int i = 0; i < permissions.length; i ++) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
