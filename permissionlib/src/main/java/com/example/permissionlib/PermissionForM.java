@@ -95,6 +95,12 @@ public class PermissionForM {
     private static PermissionListener sPermissionListener;
 
 
+    /**
+     * 核心方法
+     * @param activity
+     * @param permissions
+     * @param permissionListener
+     */
     public static void requestPermissions(Activity activity, String[] permissions, PermissionListener permissionListener) {
         sPermissionListener = permissionListener;
         if (checkSelfPermission(activity, permissions)) {
@@ -105,17 +111,33 @@ public class PermissionForM {
 
         } else {
             //没有权限，请求
-            if(shouldShowRequestPermissionRationale(activity, permissions)) {
+            if(shouldShowRequestPermissionRationale(activity, permissions) && sPermissionListener.shouldShowRationale()) {
                 if(sPermissionListener != null) {
-                    sPermissionListener.onShowRequestPermissionRationale();
+                    sPermissionListener.onShowRequestPermissionRationale(activity, permissions);
                 }
+            }else {
+                reRequest(activity, permissions);
             }
-            ActivityCompat.requestPermissions(activity,
-                    permissions,
-                    REQUEST_CODE_SINGLE_PERMISSIONS);
         }
     }
 
+    /**
+     * 在第一次请求权限拒绝后，再次请求调用此方法
+     * @param activity
+     * @param permissions
+     */
+    public static void reRequest(Activity activity, String[] permissions) {
+        ActivityCompat.requestPermissions(activity,
+                permissions,
+                REQUEST_CODE_SINGLE_PERMISSIONS);
+    }
+
+    /**
+     * 检查是否获取权限
+     * @param activity
+     * @param permissions
+     * @return
+     */
     private static boolean checkSelfPermission(Activity activity, String[] permissions) {
         for(int i = 0; i < permissions.length; i ++) {
             if(ContextCompat.checkSelfPermission(activity, permissions[i])
@@ -125,7 +147,13 @@ public class PermissionForM {
         }
         return true;
     }
-    
+
+    /**
+     * 判断是否需要向用户展示请求权限的理由
+     * @param activity
+     * @param permissions
+     * @return
+     */
     private static boolean shouldShowRequestPermissionRationale(Activity activity, String[] permissions) {
         for(int i = 0; i < permissions.length; i ++) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
@@ -143,7 +171,7 @@ public class PermissionForM {
      */
     public static void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == REQUEST_CODE_SINGLE_PERMISSIONS) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if(isSucceed(grantResults)) {
                 //成功
                 if(sPermissionListener != null) {
                     sPermissionListener.onGranted();
@@ -157,6 +185,25 @@ public class PermissionForM {
         }
     }
 
+    /**
+     * 判断权限请求是否成功
+     * @param grantResults
+     * @return
+     */
+    private static boolean isSucceed(int[] grantResults) {
+        for(int i = 0; i < grantResults.length; i ++) {
+            if(grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                //失败
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 如果拒绝了并且不再提示，那么再次执行会提示失败，执行此方法可已前去设置中app信息页面，有用户手动开启权限
+     * @param activity
+     */
     public static void go2AppSetting(Activity activity) {
         Intent intent = new Intent(
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
