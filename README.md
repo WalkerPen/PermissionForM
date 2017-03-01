@@ -1,6 +1,27 @@
 # PermissionForM
 ## 简介
-这是一个安卓6.0请求权限的一个框架， 很方便， 完全不需要你自己判断是否请求成功，全部给你封装好.
+这是一个安卓6.0请求权限的一个框架， 很方便， 完全不需要你自己判断是否请求成功，全部给你封装好。
+
+## 依赖
+在projiect的gradle文件中添加
+
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+在module的gradle文件中添加
+
+```
+dependencies {
+	        compile 'com.github.WalkerPen:PermissionForM:v1.0.5'
+	}
+```
+
+
 
 ## 使用步骤
 * 1.首先还是需要在AndroidManifest清单文件里面声明权限
