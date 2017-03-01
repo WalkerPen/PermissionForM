@@ -34,8 +34,11 @@ dependencies {
 ```
 * 2.然后用下面的方法，如果你需要从相册选择照片，那么在onHave()和onGranted()中写选择照片的代码。
 
+    注意，如果你了解过安卓6.0的权限请求，应该直到，统一组权限，只需要获取一个就行了，我在PermissionForM中封装了所有需要请求的权限，如果有疑问，请看文档最下面，我列出来。
+
 
 ```
+String[] permissions = new String[] {PermissionForM.LOCATION, PermissionForM.STORAGE, PermissionForM.CAMERA};
 PermissionForM.requestPermissions(this, permissions, new PermissionListener() {
             @Override
             public void onHave() {
@@ -184,3 +187,80 @@ requestPermissions(new Runnable() {
 
 ## 尾声
 是不是很简单，你只需要在回调方法中做对应的事就行，完全不需要自己在去判断什么时候应该做什么，如果你用了这个小框架，并且感觉不错，那么我就心满意足了，谢谢！
+
+## 附录
+PermissionForM中定义的权限
+
+
+```
+/**
+     * 联系人相关权限<br>
+     * WRITE_CONTACTS<br>
+     * GET_ACCOUNTS<br>
+     * READ_CONTACTS
+     */
+    public static final String CONTACTS = Manifest.permission.READ_CONTACTS;
+
+    /**
+     * 电话相关权限<br>
+     * READ_CALL_LOG<br>
+     * READ_PHONE_STATE<br>
+     * CALL_PHONE<br>
+     * WRITE_CALL_LOG<br>
+     * USE_SIP<br>
+     * PROCESS_OUTGOING_CALLS<br>
+     * ADD_VOICEMAIL
+     */
+    public static final String PHONE = Manifest.permission.CALL_PHONE;
+
+    /**
+     * 日历相关权限<br>
+     * READ_CALENDAR<br>
+     * WRITE_CALENDAR
+     */
+    public static final String CALENDAR = Manifest.permission.READ_CALENDAR;
+
+    /**
+     * 相机相关权限<br>
+     * CAMERA
+     */
+    public static final String CAMERA = Manifest.permission.CAMERA;
+
+    /**
+     * 传感器关权限<br>
+     * BODY_SENSORS
+     */
+    public static final String SENSORS = Manifest.permission.BODY_SENSORS;
+
+    /**
+     * 位置相关权限<br>
+     * ACCESS_FINE_LOCATION<br>
+     * ACCESS_COARSE_LOCATION
+     */
+    public static final String LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+
+    /**
+     * 外部储存相关权限<br>
+     * READ_EXTERNAL_STORAGE<br>
+     * WRITE_EXTERNAL_STORAGE
+     */
+    public static final String STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+    /**
+     * 麦克风相关权限<br>
+     * RECORD_AUDIO<br>
+     */
+    public static final String MICROPHONE = Manifest.permission.RECORD_AUDIO;
+
+    /**
+     * 短信相关权限<br>
+     * READ_SMS<br>
+     * RECEIVE_WAP_PUSH<br>
+     * RECEIVE_MMS<br>
+     * RECEIVE_SMS<br>
+     * SEND_SMS<br>
+     * READ_CELL_BROADCASTS<br>
+     */
+    public static final String SMS = Manifest.permission.SEND_SMS;
+```
+
